@@ -7,4 +7,4 @@ You can install all the required dependencies for this project by running the co
 
 ## Running
 You can run this module using the following command:
-`pipenv run python html-processor.py`.
+`pipenv run python warc_reader.py`.
