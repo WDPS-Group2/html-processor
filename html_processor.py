@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 
+
 class HtmlProcessor:
     
     PARSER_TYPE = 'html.parser'
@@ -8,7 +9,6 @@ class HtmlProcessor:
     @staticmethod
     def extract_raw_text_from_html(html_content):
         """ Strips away all the html tags including the script and style content """
-
         parsed_html = BeautifulSoup(html_content, HtmlProcessor.PARSER_TYPE)
 
         for script in parsed_html(['script', 'style']):
@@ -18,7 +18,7 @@ class HtmlProcessor:
         
         lines = (line.strip() for line in raw_text.splitlines())
         chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
-        raw_text = '\n'.join(chunk for chunk in chunks if chunk)
+        raw_text = ' '.join(chunk for chunk in chunks if chunk)
 
         return raw_text
 
@@ -34,6 +34,6 @@ class HtmlProcessor:
     
 
 if __name__ == "__main__":
-    url = "https://www.timeout.com/amsterdam/things-to-do/best-things-to-do-in-amsterdam"
-    raw_text = HtmlProcessor.extract_raw_text_from_url(url)
+    test_url = "https://www.timeout.com/amsterdam/things-to-do/best-things-to-do-in-amsterdam"
+    raw_text = HtmlProcessor.extract_raw_text_from_url(test_url)
     print(raw_text)
