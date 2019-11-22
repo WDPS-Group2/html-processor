@@ -1,13 +1,14 @@
 import argparse
 import os
 from warc_reader import WarcReader
-from archive_handler import ArchiveHandler
+from warc_checker import WarcChecker
+from html_processor import HtmlProcessor
 
 
 def is_valid_file(parser, filename):
     if not os.path.exists(filename):
         parser.error("The file %s does not exist!" % filename)
-    elif not ArchiveHandler.is_file_valid_warc_file(filename):
+    elif not WarcChecker.is_file_valid_warc_file(filename):
         parser.error("The file %s is not a .gz archive" % filename)
     return filename
 
@@ -25,8 +26,8 @@ def parse_arguments():
 def execute():
     args = parse_arguments()
     filename = args.filename
-    # warc_file = ArchiveHandler.get_file_from_archive(filename)
     warc_df = WarcReader.convert_warc_to_dataframe(filename)
+    warc_df['html'] = warc_df['html'].apply(HtmlProcessor.extract_raw_text_from_html)
     print(warc_df)
 
 
