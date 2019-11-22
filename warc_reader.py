@@ -1,12 +1,14 @@
 import warcio as warc
 import pandas as pd
-from html_processor import HtmlProcessor
+import traceback
+import sys
 
 
 class WarcReader:
 
     @staticmethod
     def get_warc_items(warc_file_iterator):
+        """ Iterates over all the warc pages and adds the ids, the urls, and the html code to separate arrays """
         warc_urls = []
         warc_ids = []
         warc_htmls = []
@@ -21,6 +23,7 @@ class WarcReader:
 
     @staticmethod
     def convert_warc_to_dataframe(warc_file_location):
+        """ Converts a warc file to a pandas Dataframe """
         try:
             warc_file = open(warc_file_location, "rb")
             warc_file_it = warc.ArchiveIterator(warc_file)
@@ -29,12 +32,5 @@ class WarcReader:
             warc_file.close()
             return warc_dataframe
         except Exception as e:
-            print(e)
+            traceback.print_exc(file=sys.stdout)
             return None
-
-
-if __name__ == "__main__":
-    warc_file_location = "/home/corneliu/sample.warc"
-    warc_df = WarcReader.convert_warc_to_dataframe(warc_file_location)
-    warc_df['html'] = warc_df['html'].apply(HtmlProcessor.extract_raw_text_from_html)
-    print(warc_df)

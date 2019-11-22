@@ -25,15 +25,10 @@ class HtmlProcessor:
     
     @staticmethod
     def extract_raw_text_from_url(url):
+        """ Downloads the html page and strips the page of html elements """
         response = requests.get(url)
         if response.status_code == 200:
             return HtmlProcessor.extract_raw_text_from_html(response.text)
         else:
             print("Could not get webpage, status code: %d" % response.status_code)
             return ""
-    
-
-if __name__ == "__main__":
-    test_url = "https://www.timeout.com/amsterdam/things-to-do/best-things-to-do-in-amsterdam"
-    raw_text = HtmlProcessor.extract_raw_text_from_url(test_url)
-    print(raw_text)
