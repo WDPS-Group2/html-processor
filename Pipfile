@@ -11,6 +11,7 @@ bs4 = "*"
 requests = "*"
 pandas = "*"
 warcio = "*"
+pyspark = "*"
 
 [requires]
 python_version = "3.7"

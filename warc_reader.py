@@ -16,13 +16,31 @@ class WarcReader:
         warc_urls = []
         warc_ids = []
         warc_htmls = []
+        unprocessed_warc_records = []
 
         for record in warc_file_iterator:
             if record.rec_type == 'response' and record.http_headers.get_header('Content-Type') == 'text/html':
-                warc_urls.append(record.rec_headers.get_header('WARC-Target-URI'))
-                warc_ids.append(record.rec_headers.get_header('WARC-Record-ID'))
-                warc_htmls.append(record.content_stream().read())
-         
+                warc_url = record.rec_headers.get_header('WARC-Target-URI')
+                warc_id = record.rec_headers.get_header('WARC-Record-ID')
+                html_bytes = record.content_stream().read()
+
+                if len(html_bytes) == 0:
+                    unprocessed_item = (warc_id, warc_url, '', "Empty warc html")
+                    unprocessed_warc_records.append(unprocessed_item)
+                    continue
+                try:
+                    warc_html = html_bytes.decode()
+                except UnicodeDecodeError as e:
+                    print(e)
+                    unprocessed_item = (warc_id, warc_url, html_bytes, e)
+                    unprocessed_warc_records.append(unprocessed_item)
+                    continue
+
+                warc_urls.append(warc_url)
+                warc_ids.append(warc_id)
+                warc_htmls.append(warc_html)
+
+        print("Nr unprocessed items: %d" % len(unprocessed_warc_records))
         return zip(warc_ids, warc_urls, warc_htmls)
 
     @staticmethod

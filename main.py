@@ -1,8 +1,12 @@
 import argparse
 import os
+import time
+
 from warc_reader import WarcReader
 from warc_checker import WarcChecker
 from html_processor import HtmlProcessor
+from pyspark.sql import SparkSession
+from pyspark.sql.types import *
 
 
 def is_valid_file(parser, filename):
@@ -23,12 +27,35 @@ def parse_arguments():
     return args
 
 
-def execute():
-    args = parse_arguments()
-    filename = args.filename
-    warc_df = WarcReader.convert_warc_to_dataframe(filename)
-    warc_df['html'] = warc_df['html'].apply(HtmlProcessor.extract_raw_text_from_html)
-    print(warc_df)
+def get_spark_schema():
+    return StructType([
+        StructField("id", StringType(), True),
+        StructField("url", StringType(), True),
+        StructField("html", StringType(), True)])
 
 
-execute()
+def get_spark_dataframe_for_warc_filename(warc_filename):
+    spark = SparkSession.builder.appName('htmlProcessor').getOrCreate()
+    sc = spark.sparkContext
+    print("Default parallelism: %d" % sc.defaultParallelism)
+
+    html_to_raw_udf = spark.udf.register("html_to_raw", HtmlProcessor.extract_raw_text_from_html)
+
+    spark_schema = get_spark_schema()
+    warc_pandas_df = WarcReader.convert_warc_to_dataframe(warc_filename)
+    warc_df = spark.createDataFrame(warc_pandas_df, schema=spark_schema)
+
+    print("Number of partitions for dataframe: %d" % (warc_df.rdd.getNumPartitions()))
+
+    raw_warc_df = warc_df.select("id", "url", html_to_raw_udf("html").alias("html"))
+    raw_warc_df.show()
+    return raw_warc_df
+
+
+start_time = time.time()
+args = parse_arguments()
+filename = args.filename
+get_spark_dataframe_for_warc_filename(filename)
+duration = time.time() - start_time
+print("Execution duration: %.2fs" % duration)
+
