@@ -5,7 +5,12 @@ Make sure you have pipenv installed. If you don't, you can install it using the 
 ## Dependencies
 You can install all the required dependencies for this project by running the command: `pipenv install`.
 
+## Spark
+In order to run the scripts within Spark, you need to have Spark installed. You can find more information [here](https://spark.apache.org/docs/latest/).
+
 ## Running
-You can run this module using the following command:
-`pipenv run python main.py -f [path_to_warc_file]`. Make sure you provide a valid `.warc` or `.warc.gz` file as a 
-parameter. 
+In order to run the scripts within Spark, please use the following command: `spark-submit main.py -f [PATH_TO_WARC_FILE]`.
+
+
+
+
