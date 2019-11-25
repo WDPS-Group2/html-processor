@@ -1,4 +1,4 @@
-from warc_checker import WarcChecker
+from .warc_checker import WarcChecker
 
 import warcio as warc
 import pandas as pd
