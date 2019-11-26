@@ -1,10 +1,14 @@
 import argparse
 import os
 import time
+import sys
 
-from warc_reader import WarcReader
-from warc_checker import WarcChecker
-from html_processor import HtmlProcessor
+if os.path.exists('libs.zip'):
+    sys.path.insert(0, 'libs.zip')
+
+from warc.warc_reader import WarcReader
+from warc.warc_checker import WarcChecker
+from html_handler.html_processor import HtmlProcessor
 from pyspark.sql import SparkSession
 from pyspark.sql.types import *
 
