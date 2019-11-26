@@ -5,8 +5,6 @@ import sys
 
 if os.path.exists('libs.zip'):
     sys.path.insert(0, 'libs.zip')
-if os.path.exists('vendor.zip'):
-    sys.path.insert(0, 'vendor.zip')
 
 from warc.warc_reader import WarcReader
 from warc.warc_checker import WarcChecker
