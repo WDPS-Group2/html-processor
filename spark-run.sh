@@ -1,7 +1,7 @@
-if [[ -z "${SPARK_SUBMIT_LOCATION}" ]]; then
-  SPARK_SUBMIT="/opt/spark-2.4.4-bin-hadoop2.7/bin/spark-submit"
+if [[ -z "${SPARK_DIR}" ]]; then
+  SPARK_SUBMIT="/opt/spark-3.0.0-preview-bin-hadoop2.7/bin/spark-submit"
 else
-  SPARK_SUBMIT="${SPARK_SUBMIT_LOCATION}"
+  SPARK_SUBMIT="${SPARK_DIR}/bin/spark-submit"
 fi
 
 if (( $# != 1)); then

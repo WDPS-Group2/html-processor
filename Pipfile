@@ -12,6 +12,7 @@ requests = "*"
 pandas = "*"
 warcio = "*"
 pyspark = "*"
+nltk = "*"
 
 [requires]
 python_version = "3.6"
