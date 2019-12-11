@@ -1,11 +1,10 @@
 import requests
 
-QUERY = """
-select distinct ?abstract where {
-    ?s <http://www.w3.org/2002/07/owl#sameAs> <http://rdf.freebase.com/ns/%s> .
-    ?s <http://www.w3.org/2002/07/owl#sameAs> ?o .
-    ?o <http://dbpedia.org/ontology/abstract> ?abstract .
-}"""
+QUERY = "select distinct ?abstract where {\
+    ?s <http://www.w3.org/2002/07/owl#sameAs> <http://rdf.freebase.com/ns/%s> .\
+    ?s <http://www.w3.org/2002/07/owl#sameAs> ?o .\
+    ?o <http://dbpedia.org/ontology/abstract> ?abstract .\
+}"
 
 TRIDENT_SPARQL_ENDPOINT = "/sparql"
 
@@ -16,7 +15,7 @@ def query_trident_for_abstract_content(trident_host, trident_port, freebase_id):
     url = "http://{}:{}{}".format(trident_host, trident_port, TRIDENT_SPARQL_ENDPOINT)
 
     try:
-        response = requests.post(url, data={'print': True, 'query': q})
+        response = requests.post(url, data={'print': True, 'query': q}, timeout=10)
         response = response.json() if response else None
     except Exception as e:
         print("Exception when querying Trident: ", e)
