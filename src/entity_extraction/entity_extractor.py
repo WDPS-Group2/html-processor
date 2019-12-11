@@ -17,5 +17,4 @@ def extract_entities(text):
     english_stopwords = stopwords.words("english")
     text = list(filter(lambda word_pos: word_pos[1].startswith("NN") and word_pos[0] not in english_stopwords, text))
     text = list(map(lambda word_pos: [word_pos[0], PorterStemmer().stem(word_pos[0]), word_pos[1]], text))
-
     return text
