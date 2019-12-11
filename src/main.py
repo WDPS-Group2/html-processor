@@ -35,7 +35,9 @@ filename = args.filename
 
 warc_df = SparkExecutor.get_spark_dataframe_for_warc_filename(filename)
 warc_entities_df = SparkExecutor.extract_entities_from_warc_spark_df(warc_df)
-warc_entities_df.show(100, False)
+candidate_entities_df = SparkExecutor.get_candidate_entities_for_df(warc_entities_df)
+
+candidate_entities_df.show(300)
 duration = time.time() - start_time
 print("Execution duration: %.2fs" % duration)
 

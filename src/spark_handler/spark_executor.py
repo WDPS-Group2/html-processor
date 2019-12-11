@@ -4,6 +4,7 @@ from pyspark.sql import functions
 from html_handler import html_processor
 from warc import warc_reader
 from entity_extraction import entity_extractor
+from entity_linking import syntactic_matcher
 
 
 class SparkExecutor:
@@ -29,7 +30,7 @@ class SparkExecutor:
         exploded_df = entities_warc_df.withColumn("entity", functions.explode(entities_warc_df.tagged_tokens))
         lemmatized_df = exploded_df.selectExpr("id", "entity[0] as entity", "entity[1] as lemma", "entity[2] as POS")
 
-        # TODO: Change group by from entity to the correct lemma version of all entities, when it is available
+        # TODO: Change groupBy from entity to the correct lemma version of all entities, when it is available
         group_data = lemmatized_df.groupBy("id", "entity")
         grouped_lemmatized_df = group_data.agg({"entity": "count"})\
             .withColumnRenamed("count(entity)", "N")\
@@ -50,3 +51,13 @@ class SparkExecutor:
         raw_warc_df = warc_df.select("id", "url", html_to_raw_udf("html").alias("html"))
         return raw_warc_df
 
+    @staticmethod
+    def get_candidate_entities_for_df(warc_df):
+        entity_candidates_retriever_udf = SparkExecutor.spark.udf.register("retrieve_candidate_entities",
+                                                                           syntactic_matcher.
+                                                                           query_elasticsearch_for_candidate_entities,
+                                                                           ArrayType(MapType(StringType(), StringType())))
+
+        entity_candidates_df = warc_df.withColumn("candidates", entity_candidates_retriever_udf("entity"))
+        # return entity_candidates_df.filter(functions.size(entity_candidates_df.candidates) > 0)
+        return entity_candidates_df
