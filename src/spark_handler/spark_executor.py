@@ -52,11 +52,18 @@ class SparkExecutor:
         return raw_warc_df
 
     @staticmethod
-    def get_candidate_entities_for_df(warc_df):
-        entity_candidates_retriever_udf = SparkExecutor.spark.udf.register("retrieve_candidate_entities",
-                                                                           syntactic_matcher.
-                                                                           query_elasticsearch_for_candidate_entities,
-                                                                           ArrayType(MapType(StringType(), StringType())))
+    def find_candidates_for_item(entity, es_host, es_port):
+        return syntactic_matcher.query_elasticsearch_for_candidate_entities(entity, es_host, es_port)
+
+    @staticmethod
+    def get_candidate_entities_for_df(warc_df, es_host, es_port):
+        entity_candidates_retriever_udf = SparkExecutor\
+            .spark\
+            .udf\
+            .register(
+                "retrieve_candidate_entities",
+                lambda entity: SparkExecutor.find_candidates_for_item(entity, es_host, es_port),
+                ArrayType(MapType(StringType(), StringType())))
 
         entity_candidates_df = warc_df.withColumn("candidates", entity_candidates_retriever_udf("entity"))
         # return entity_candidates_df.filter(functions.size(entity_candidates_df.candidates) > 0)

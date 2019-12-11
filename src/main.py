@@ -20,9 +20,18 @@ def is_valid_file(parser, filename):
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Warc processor')
+
     parser.add_argument("-f", "--filename", dest="filename",
                         required=True, help="warc file archive",
                         metavar="FILE", type=lambda x: is_valid_file(parser, x))
+
+    parser.add_argument("-esHost", dest="es_host",
+                        required=True, help="Hostname for Elasticsearch",
+                        metavar="HOSTNAME", type=str)
+
+    parser.add_argument("-esPort", dest="es_port",
+                        required=True, help="Port for Elasticsearch",
+                        metavar="PORT", type=int)
 
     args = parser.parse_args()
     return args
@@ -31,11 +40,10 @@ def parse_arguments():
 start_time = time.time()
 
 args = parse_arguments()
-filename = args.filename
 
-warc_df = SparkExecutor.get_spark_dataframe_for_warc_filename(filename)
+warc_df = SparkExecutor.get_spark_dataframe_for_warc_filename(args.filename)
 warc_entities_df = SparkExecutor.extract_entities_from_warc_spark_df(warc_df)
-candidate_entities_df = SparkExecutor.get_candidate_entities_for_df(warc_entities_df)
+candidate_entities_df = SparkExecutor.get_candidate_entities_for_df(warc_entities_df, args.es_host, args.es_port)
 
 candidate_entities_df.show(300)
 duration = time.time() - start_time

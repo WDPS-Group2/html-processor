@@ -1,10 +1,8 @@
 import requests
 
 # TODO: Extract to environment variables
-EL_HOST = "10.141.0.51"
-EL_PORT = "9200"
-EL_ENDPOINT = "/freebase/label/_search"
-EL_MAX_SIZE = 20
+ES_ENDPOINT = "/freebase/label/_search"
+ES_MAX_SIZE = 20
 
 
 class FreebaseItem:
@@ -36,11 +34,11 @@ def extract_matches_from_es_response(entity, es_response):
     return matches
 
 
-def query_elasticsearch_for_candidate_entities(entity):
-    url = "http://{}:{}{}".format(EL_HOST, EL_PORT, EL_ENDPOINT)
+def query_elasticsearch_for_candidate_entities(entity, es_host, es_port):
+    url = "http://{}:{}{}".format(es_host, es_port, ES_ENDPOINT)
 
     try:
-        response = requests.get(url, params={'q': entity, 'size': EL_MAX_SIZE})
+        response = requests.get(url, params={'q': entity, 'size': ES_MAX_SIZE})
         return extract_matches_from_es_response(entity, response)
     except Exception as e:
         print(e)
