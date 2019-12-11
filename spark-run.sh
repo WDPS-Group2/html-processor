@@ -20,7 +20,7 @@ echo "Starting Trident on a new node"
 
 prun -o .td_log -v -t 00:15:00 -np 1 $TD_BIN server -i $TD_PATH --port $TD_PORT </dev/null 2> .td_node &
 echo "waiting 5 seconds for trident to set up..."
-until [ -n "$TD_NODE" ]; do $TD_NODE=$(cat .td_node | grep '^:' | grep -oP '(node...)'); done
+until [ -n "$TD_NODE" ]; do TD_NODE=$(cat .td_node | grep '^:' | grep -oP '(node...)'); done
 sleep 5
 TD_PID=$!
 
