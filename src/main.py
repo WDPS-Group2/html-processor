@@ -33,8 +33,16 @@ def parse_arguments():
                         required=True, help="Port for Elasticsearch",
                         metavar="PORT", type=int)
 
-    args = parser.parse_args()
-    return args
+    parser.add_argument("-tdHost", dest="td_host",
+                        required=True, help="Hostname for Trident",
+                        metavar="HOSTNAME", type=str)
+
+    parser.add_argument("-tdPort", dest="td_port",
+                        required=True, help="Port for Trident",
+                        metavar="PORT", type=str)
+
+    parsed_args = parser.parse_args()
+    return parsed_args
 
 
 start_time = time.time()
@@ -43,7 +51,9 @@ args = parse_arguments()
 
 warc_df = SparkExecutor.get_spark_dataframe_for_warc_filename(args.filename)
 warc_entities_df = SparkExecutor.extract_entities_from_warc_spark_df(warc_df)
-candidate_entities_df = SparkExecutor.get_candidate_entities_for_df(warc_entities_df, args.es_host, args.es_port)
+candidate_entities_df = SparkExecutor.get_candidate_entities_for_df(warc_entities_df,
+                                                                    args.es_host, args.es_port,
+                                                                    args.td_host, args.td_port)
 
 candidate_entities_df.show(300)
 duration = time.time() - start_time

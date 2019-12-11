@@ -5,6 +5,7 @@ from html_handler import html_processor
 from warc import warc_reader
 from entity_extraction import entity_extractor
 from entity_linking import syntactic_matcher
+from entity_linking import knowledge_base_handler
 
 
 class SparkExecutor:
@@ -31,12 +32,8 @@ class SparkExecutor:
         lemmatized_df = exploded_df.selectExpr("id", "entity[0] as entity", "entity[1] as lemma", "entity[2] as POS")
 
         # TODO: Change groupBy from entity to the correct lemma version of all entities, when it is available
-        group_data = lemmatized_df.groupBy("id", "entity")
-        grouped_lemmatized_df = group_data.agg({"entity": "count"})\
-            .withColumnRenamed("count(entity)", "N")\
-            .orderBy("id", "N")
-
-        return grouped_lemmatized_df
+        unique_ids_entities_df = lemmatized_df.select("id", "entity").distinct().orderBy("id")
+        return unique_ids_entities_df
 
     @staticmethod
     def get_spark_dataframe_for_warc_filename(warc_filename):
@@ -52,19 +49,32 @@ class SparkExecutor:
         return raw_warc_df
 
     @staticmethod
-    def find_candidates_for_item(entity, es_host, es_port):
-        return syntactic_matcher.query_elasticsearch_for_candidate_entities(entity, es_host, es_port)
+    def find_candidates_for_item(entity, es_host, es_port, td_host, td_port):
+        candidate_entities = syntactic_matcher.query_elasticsearch_for_candidate_entities(entity, es_host, es_port)
+
+        candidates_abstract_list = []
+        for candidate in candidate_entities:
+            abstract = knowledge_base_handler\
+                .query_trident_for_abstract_content(td_host, td_port, candidate.freebase_id)
+
+            if abstract is None:
+                continue
+
+            candidates_abstract_list.append([candidate.freebase_id, abstract])
+
+        return candidates_abstract_list
 
     @staticmethod
-    def get_candidate_entities_for_df(warc_df, es_host, es_port):
+    def get_candidate_entities_for_df(warc_df, es_host, es_port, td_host, td_port):
         entity_candidates_retriever_udf = SparkExecutor\
             .spark\
             .udf\
             .register(
                 "retrieve_candidate_entities",
-                lambda entity: SparkExecutor.find_candidates_for_item(entity, es_host, es_port),
-                ArrayType(MapType(StringType(), StringType())))
+                lambda entity: SparkExecutor.find_candidates_for_item(entity, es_host, es_port, td_host, td_port),
+                ArrayType(ArrayType(StringType())))
 
         entity_candidates_df = warc_df.withColumn("candidates", entity_candidates_retriever_udf("entity"))
+
         # return entity_candidates_df.filter(functions.size(entity_candidates_df.candidates) > 0)
         return entity_candidates_df

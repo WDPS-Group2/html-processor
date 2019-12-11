@@ -1,6 +1,5 @@
 import requests
 
-# TODO: Extract to environment variables
 ES_ENDPOINT = "/freebase/label/_search"
 ES_MAX_SIZE = 20
 

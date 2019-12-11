@@ -1,6 +1,9 @@
 ES_HOST="127.0.0.1"
 ES_PORT="9200"
 
+TD_HOST="127.0.0.1"
+TD_PORT="9200"
+
 if [[ -z "${WDPS_SPARK_DIR}" ]]; then
   SPARK_SUBMIT="/opt/spark-3.0.0-preview-bin-hadoop2.7/bin/spark-submit"
 else
@@ -22,4 +25,4 @@ $SPARK_SUBMIT \
 --conf "spark.pyspark.python=`pipenv --py`" \
 --conf "spark.pyspark.driver.python=`pipenv --py`" \
 --py-files dist/libs.zip \
-dist/main.py -f $1 -esHost $ES_HOST -esPort $ES_PORT
+dist/main.py -f $1 -esHost $ES_HOST -esPort $ES_PORT -tdHost $TD_HOST -tdPort $TD_PORT
