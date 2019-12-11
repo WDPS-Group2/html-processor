@@ -2,7 +2,7 @@ ES_PORT=9200
 ES_BIN=/home/wdps1902/elasticsearch-2.4.1/bin/elasticsearch
 
 TD_PORT=9090
-TD_BIN=/home/jurbani/trident/build/trident server
+TD_BIN=/home/jurbani/trident/build/trident
 TD_PATH=/home/jurbani/data/motherkb-trident
 
 echo "Starting elasticsearch on a new node"
