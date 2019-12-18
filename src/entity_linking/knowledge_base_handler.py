@@ -42,7 +42,8 @@ class EmbeddedTridentHandler(TridentHandler):
 
     # TODO: Implement method by returning real content from the Trident server
     def query_trident_for_abstract_content(self, freebase_id):
-        q = QUERY % freebase_id
+        key = freebase_id[1:].replace("/", ".")
+        q = QUERY % key
         results = self.db.sparql(q)
         print("Trident results: " + results)
         return None
