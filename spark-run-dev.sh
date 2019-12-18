@@ -21,6 +21,8 @@ mkdir dist/
 cp src/main.py dist/
 cd src/ && zip -x main.py -r ../dist/libs.zip . && cd ..
 
+export WDPS_IS_DEV=1
+
 $SPARK_SUBMIT \
 --conf "spark.pyspark.python=`pipenv --py`" \
 --conf "spark.pyspark.driver.python=`pipenv --py`" \

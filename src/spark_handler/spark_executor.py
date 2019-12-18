@@ -5,7 +5,7 @@ from html_handler import html_processor
 from warc import warc_reader
 from entity_extraction import entity_extractor
 from entity_linking import syntactic_matcher
-from entity_linking import knowledge_base_handler
+from entity_linking.knowledge_base_handler import TridentHandler, MockTridentHandler, EmbeddedTridentHandler
 
 
 class SparkExecutor:
@@ -13,6 +13,8 @@ class SparkExecutor:
     APPLICATION_NAME = "warcExtractor"
     spark = SparkSession.builder.appName(APPLICATION_NAME).getOrCreate()
     sc = spark.sparkContext
+
+    kb_handler = TridentHandler.get_trident_instance()
 
     @staticmethod
     def get_spark_schema():
@@ -54,8 +56,7 @@ class SparkExecutor:
 
         candidates_abstract_list = []
         for candidate in candidate_entities:
-            abstract = knowledge_base_handler\
-                .query_trident_for_abstract_content(td_host, td_port, candidate.freebase_id)
+            abstract = SparkExecutor.kb_handler.query_trident_for_abstract_content(candidate.freebase_id)
 
             if abstract is None:
                 continue

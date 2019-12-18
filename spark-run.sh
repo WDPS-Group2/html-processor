@@ -49,6 +49,8 @@ cd src/ && zip -x main.py -r ../dist/libs.zip . && cd ..
 
 echo "Running the WDPS entity linking within Spark!"
 
+export PYTHONPATH=/home/jurbani/trident/build-python
+
 $SPARK_SUBMIT \
 --conf "spark.pyspark.python=`pipenv --py`" \
 --conf "spark.pyspark.driver.python=`pipenv --py`" \
