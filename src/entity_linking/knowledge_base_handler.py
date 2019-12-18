@@ -40,44 +40,18 @@ class EmbeddedTridentHandler(TridentHandler):
         import trident
         self.db = trident.Db(TRIDENT_DB_LOCATION)
 
-    # TODO: Implement method by returning real content from the Trident server
     def query_trident_for_abstract_content(self, freebase_id):
         key = freebase_id[1:].replace("/", ".")
         q = QUERY % key
         results = self.db.sparql(q)
-        print("Trident results: " + results)
+        results_json = json.loads(results)
+
+        for binding in results_json.get('results', {}).get('bindings', []):
+            abstract = binding.get('abstract', {}).get('value')
+            if abstract[-3:-1] == "en":
+                return abstract
+
         return None
-
-
-# def query_trident_for_abstract_content(trident_host, trident_port, freebase_id):
-#     key = freebase_id[1:].replace("/", ".")
-#     q = QUERY % key
-#     url = "http://{}:{}{}".format(trident_host, trident_port, TRIDENT_SPARQL_ENDPOINT)
-#
-#     try:
-#         response = requests.post(url, data={'print': True, 'query': q}, timeout=10)
-#         response = response.json() if response else None
-#     except Exception as e:
-#         print("Exception when querying Trident: ", e)
-#         return None
-#
-#     if not response:
-#         print("Could not parse response for query: %s", q)
-#         return None
-#
-#     for binding in response.get('results', {}).get('bindings', []):
-#         abstract = binding.get('abstract', {}).get('value')
-#         if abstract[-3:-1] == "en":
-#             return abstract
-
-
-# if __name__ == '__main__':
-#     host = "localhost"
-#     port = "9200"
-#     freebase_id = "test"
-#
-#     query_response = query_trident_for_abstract_content(host, port, freebase_id)
-#     print(query_response)
 
 
 
