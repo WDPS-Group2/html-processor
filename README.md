@@ -17,14 +17,31 @@ You can easily run the code within spark by executing the script ***spark-run.sh
  Before running the script, please make sure you are in the same directory with the script and then, you can execute it as follows:
  `./spark-run.sh [location of warc file]`.
 
+# Summary of the process 
+We divide the process roughly in three stages: 
+1. Extraction of Raw Text from WARC-file
+2. Entity Extraction
+3. Entity Linking
+All processes consist of multiple steps. An overview of the process is given in the diagram below. 
 ![Diagram of the process](Process_diagram.png)
 
+## Extraction of Raw Text from WARC-file
+To start the entity linking process, we first need to extract the raw text from the HTML-pages in the WARC-file. 
+* Read the WARC-file and check the validity in terms of extension and format.
+* Use the library “BeautifulSoup” to strip the text from all HTML tags and to remove scripts, styles, footers, headers, etc. 
 
 ## Entity Extraction
+After the raw text is obtained, the knowledge extraction process is started. The entity extraction is divided into two parts:
+
 ### NLP preprocessing
+We use the "NLTK"-library to perform the Natural Language Processing (NLP) tasks.
+* Tokenize the text.
+* Give each token a POS-tag and filter on the nouns.
+* Remove English stopwords.
+* Lemmatize the tokens to transform among other things the plural form of a word to the singular form.
 
 ### Named Entity Recognition
-
+After the preprocessing, we go find the named entities. This process is called Named Entity Recognition. The classifier we use is StanfordNER.
 
 ## Entity Linking
 After the entity mentions in the document are extracted, we link the mentions with their named entities to the Knowledge Base. We divide the entity linking into the following parts:
