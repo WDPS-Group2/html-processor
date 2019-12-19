@@ -24,7 +24,7 @@ You can easily run the code within spark by executing the script ***spark-run.sh
 After the entity mentions in the document are extracted, we link the mentions with their named entities to the Knowledge Base. We divide the entity linking into the following parts:
 
 ### Candidate Entity Generation - Query the Knowledge Base
-If the mention is English words, input surface form of mentions to ElasticSearch to get 20 candidate named entities with the highest popularity score from FreeBase.
+If the mention is an English word, we link the input surface form of the mentions to ElasticSearch. We obtain the 20 candidate named entities with the highest popularity score from FreeBase.
 
 ### Candidate Entity Ranking - Rank the candidate named entities
 We assign a score to each of the candidates, and rank them according to the score:
