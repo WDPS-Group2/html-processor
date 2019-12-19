@@ -19,6 +19,13 @@ You can easily run the code within spark by executing the script ***spark-run.sh
 
 ![Diagram of the process](Process_diagram.png)
 
+
+## Entity Extraction
+### NLP preprocessing
+
+### Named Entity Recognition
+
+
 ## Entity Linking
 After the entity mentions in the document are extracted, we link the mentions with their named entities to the Knowledge Base. We divide the entity linking into the following parts:
 
