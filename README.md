@@ -17,8 +17,7 @@ You can easily run the code within spark by executing the script ***spark-run.sh
  Before running the script, please make sure you are in the same directory with the script and then, you can execute it as follows:
  `./spark-run.sh [location of warc file]`.
 
-
-
+![Diagram of the process](Process_diagram.png)
 
 ## Entity Linking
 After the entity mentions in the document are extracted, we link the mentions with their named entities to the Knowledge Base. We divide the entity linking into the following parts:
