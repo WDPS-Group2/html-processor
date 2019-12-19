@@ -61,7 +61,7 @@ class SparkExecutor:
             if abstract is None:
                 continue
 
-            print(candidate, abstract)
+            print(candidate.freebase_label, abstract)
             candidates_abstract_list.append([candidate.freebase_id, abstract])
 
         return candidates_abstract_list
