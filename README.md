@@ -22,6 +22,7 @@ We divide the process roughly in three stages:
 1. Extraction of Raw Text from WARC-file
 2. Entity Extraction
 3. Entity Linking
+
 All processes consist of multiple steps. An overview of the process is given in the diagram below. 
 ![Diagram of the process](Process_diagram.png)
 
