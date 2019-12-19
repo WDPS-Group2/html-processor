@@ -26,12 +26,12 @@ We divide the process roughly in three stages:
 All processes consist of multiple steps. An overview of the process is given in the diagram below. 
 ![Diagram of the process](Process_diagram.png)
 
-## Extraction of Raw Text from WARC-file
+## (1 & 2) Extraction of Raw Text from WARC-file
 To start the entity linking process, we first need to extract the raw text from the HTML-pages in the WARC-file. 
 * Read the WARC-file and check the validity in terms of extension and format.
 * Use the library “BeautifulSoup” to strip the text from all HTML tags and to remove scripts, styles, footers, headers, etc. 
 
-## Entity Extraction
+## (3) Entity Extraction
 After the raw text is obtained, the knowledge extraction process is started. The entity extraction is divided into two parts:
 
 ### NLP preprocessing
@@ -44,7 +44,7 @@ We use the "NLTK"-library to perform the Natural Language Processing (NLP) tasks
 ### Named Entity Recognition
 After the preprocessing, we go find the named entities. This process is called Named Entity Recognition. The classifier we use is StanfordNER.
 
-## Entity Linking
+## (4 & 5 & 6) Entity Linking
 After the entity mentions in the document are extracted, we link the mentions with their named entities to the Knowledge Base. We divide the entity linking into the following parts:
 
 ### Candidate Entity Generation - Query the Knowledge Base
