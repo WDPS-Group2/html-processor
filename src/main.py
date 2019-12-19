@@ -55,7 +55,7 @@ candidate_entities_df = SparkExecutor.get_candidate_entities_for_df(warc_entitie
                                                                     args.es_host, args.es_port,
                                                                     args.td_host, args.td_port)
 
-candidate_entities_df.show(300)
+candidate_entities_df.show(3)
 duration = time.time() - start_time
 print("Execution duration: %.2fs" % duration)
 

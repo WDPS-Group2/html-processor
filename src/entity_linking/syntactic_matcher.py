@@ -1,7 +1,7 @@
 import requests
 
 ES_ENDPOINT = "/freebase/label/_search"
-ES_MAX_SIZE = 20
+ES_MAX_SIZE = 5
 
 
 class FreebaseItem:
