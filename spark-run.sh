@@ -16,15 +16,15 @@ until [ -n "$(cat .es_log* | grep YELLOW)" ]; do sleep 1; done
 
 echo "Elastichsearch should be running now on node $ES_NODE:$ES_PORT (connected to process $ES_PID)"
 
-echo "Starting Trident on a new node"
-
-prun -o .td_log -v -t 00:15:00 -np 1 $TD_BIN server -i $TD_PATH --port $TD_PORT </dev/null 2> .td_node &
-echo "waiting 5 seconds for trident to set up..."
-until [ -n "$TD_NODE" ]; do TD_NODE=$(cat .td_node | grep '^:' | grep -oP '(node...)'); done
-sleep 5
-TD_PID=$!
-
-echo "Trident should be running now on node $TD_NODE:$TD_PORT (connected to process $TD_PID)"
+#echo "Starting Trident on a new node"
+#
+#prun -o .td_log -v -t 00:15:00 -np 1 $TD_BIN server -i $TD_PATH --port $TD_PORT </dev/null 2> .td_node &
+#echo "waiting 5 seconds for trident to set up..."
+#until [ -n "$TD_NODE" ]; do TD_NODE=$(cat .td_node | grep '^:' | grep -oP '(node...)'); done
+#sleep 5
+#TD_PID=$!
+#
+#echo "Trident should be running now on node $TD_NODE:$TD_PORT (connected to process $TD_PID)"
 
 if [[ -z "${WDPS_SPARK_DIR}" ]]; then
   SPARK_SUBMIT="/local/spark/spark-2.4.0-bin-hadoop2.7/bin/spark-submit"
@@ -55,9 +55,9 @@ $SPARK_SUBMIT \
 --conf "spark.pyspark.python=`pipenv --py`" \
 --conf "spark.pyspark.driver.python=`pipenv --py`" \
 --py-files dist/libs.zip \
-dist/main.py -f $1 -esHost $ES_NODE -esPort $ES_PORT -tdHost $TD_NODE -tdPort $TD_PORT
+dist/main.py -f $1 -esHost $ES_NODE -esPort $ES_PORT -tdHost mock -tdPort $TD_PORT
 
 echo "Killing Elasticsearch"
 kill $ES_PID
-echo "Killing Trident"
-kill $TD_PID
+#echo "Killing Trident"
+#kill $TD_PID

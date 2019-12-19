@@ -49,9 +49,18 @@ class EmbeddedTridentHandler(TridentHandler):
         for binding in results_json.get('results', {}).get('bindings', []):
             abstract = binding.get('abstract', {}).get('value')
             if abstract[-3:-1] == "en":
+                print(freebase_id, abstract)
                 return abstract
 
         return None
+
+
+if __name__ == '__main__':
+    trident = TridentHandler.get_trident_instance()
+    freebase_ids = ["/m/0707q", "/m/0707q", "/m/0707q", "/m/0707q", "/m/0707q", "/m/0707q", "/m/0707q", "/m/0707q", "/m/0707q", "/m/0707q", "/m/0707q", "/m/0707q"]
+    for id in freebase_ids:
+        result = trident.query_trident_for_abstract_content(id)
+        print(id, result)
 
 
 
