@@ -52,6 +52,8 @@ nodes and it will submit an Apache Spark Task to execute the solution:
 * **INPUT_WARC_FILE_FROM_HDFS**: A warc file archive stored in **HDFS**, e.g. *hdfs:///user/wdps1902/sample.warc.gz*
 * **OUTPUT_TSV**: The name of the file where the output will be stored, example: `output.tsv`. 
 
+Estimated running time: **15-20 minutes**.
+
 ## F1 Score
 
 After the script is finished executing, you can calculate the **F1** score using the provided Python script: 
