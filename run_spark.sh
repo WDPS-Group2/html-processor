@@ -78,8 +78,9 @@ PYSPARK_PYTHON=$(readlink -f $(which python3)) /home/bbkruit/spark-2.4.0-bin-wit
 --conf spark.executorEnv.NLTK_DATA=./NLTK_DATA/ \
 --master yarn \
 --deploy-mode cluster \
---num-executors 20 \
---executor-memory 4G \
+--num-executors 38 \
+--executor-cores 2 \
+--executor-memory 6GB
 --archives venv.zip#VENV,nltk_data.zip#NLTK_DATA \
 --py-files libs.zip \
 src/spark_runner.py $INFILE $OUTFILE $ES_NODE:$ES_PORT $TD_NODE:$TD_PORT
