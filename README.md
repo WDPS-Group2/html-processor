@@ -34,7 +34,7 @@ Make sure you are located in the previously mentioned directory and run the foll
 ## F1 Score
 
 After the script is finished executing, you can calculate the **F1** score using the provided Python script: 
-`python3 f1_score_calculcation.py <BENCHMARK_FILE> <OUTPUT_FILE>`
+`python3 score.py <BENCHMARK_FILE> <OUTPUT_FILE>`
 * **BENCHMARK_FILE**: represents a tab separated file with the benchmark values;
 * **OUTPUT_FILE**: represents the output predictions returned by the script.
 

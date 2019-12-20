@@ -16,7 +16,7 @@ def html2text(record):
     html_doc = record2html(record)
     useless_tags = ['footer', 'header', 'sidebar', 'sidebar-right', 'sidebar-left', 'sidebar-wrapper', 'wrapwidget', 'widget']
     if html_doc:
-        soup = BeautifulSoup(html_doc,"html.parser");
+        soup = BeautifulSoup(html_doc,"html.parser")
 
         [s.extract() for s in soup(['script','style', 'code','title','head','footer','header'])]
         [s.extract() for s in soup.find_all(id = useless_tags)]

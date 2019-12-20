@@ -7,31 +7,43 @@ TD_PATH=/home/jurbani/data/motherkb-trident
 
 echo "Zipping local python dependencies"
 
-zip libs.zip html2text.py
-zip libs.zip nlp_preproc_spark.py
-zip libs.zip elasticsearch.py
-zip libs.zip sparql.py
+if [ -f "libs.zip" ]; then
+  echo "Local python dependencies archive already exists"
+else
+  zip libs.zip html2text.py
+  zip libs.zip nlp_preproc_spark.py
+  zip libs.zip elasticsearch.py
+  zip libs.zip sparql.py
+fi
 
 echo "Zipping third-party python dependencies"
 
-source venv/bin/activate
-virtualenv --relocatable venv
-zip -r venv.zip venv
+if [ -f "venv.zip" ]; then
+  echo "Third-party python dependencies archive already exists"
+else
+  source venv/bin/activate
+  virtualenv --relocatable venv
+  zip -r venv.zip venv
+fi
 
 echo "Downloading and zipping nltk_data"
 
-rm -rf nltk_data/
-rm nltk_data.zip
-mkdir nltk_data
-cd nltk_data
-python3 -m nltk.downloader -d ./ maxent_ne_chunker
-python3 -m nltk.downloader -d ./ stopwords
-python3 -m nltk.downloader -d ./ words
-python3 -m nltk.downloader -d ./ averaged_perceptron_tagger
-python3 -m nltk.downloader -d ./ punkt
-zip -r nltk_data.zip ./*
-mv nltk_data.zip ../
-cd ..
+if [ -f "nltk_data.zip" ]; then
+  echo "Nltk data archive already exists"
+else
+  rm -rf nltk_data/
+  rm nltk_data.zip
+  mkdir nltk_data
+  cd nltk_data
+  python3 -m nltk.downloader -d ./ maxent_ne_chunker
+  python3 -m nltk.downloader -d ./ stopwords
+  python3 -m nltk.downloader -d ./ words
+  python3 -m nltk.downloader -d ./ averaged_perceptron_tagger
+  python3 -m nltk.downloader -d ./ punkt
+  zip -r nltk_data.zip ./*
+  mv nltk_data.zip ../
+  cd ..
+fi
 
 echo "Starting elasticsearch on a new node"
 
@@ -69,7 +81,7 @@ PYSPARK_PYTHON=$(readlink -f $(which python3)) /home/bbkruit/spark-2.4.0-bin-wit
 --conf spark.executorEnv.NLTK_DATA=./NLTK_DATA/ \
 --master yarn \
 --deploy-mode cluster \
---num-executors 16 \
+--num-executors 20 \
 --executor-memory 4G \
 --archives venv.zip#VENV,nltk_data.zip#NLTK_DATA \
 --py-files libs.zip \

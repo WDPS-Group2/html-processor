@@ -35,7 +35,7 @@ def find_key(payload):
 
 def cosine_sim(text1, text2):
         tfidf = vectorizer.fit_transform([text1, text2])
-        return ((tfidf * tfidf.T).A)[0,1]
+        return ((tfidf * tfidf.T).A)[0, 1]
 
 
 def ner_tagged_tokens(record):
@@ -68,11 +68,12 @@ def query_candidate_abstract(entity):
 
 def candidate_entity_generation(record):
     key, text, token = record
+    print("Generating candidate entities for record: %s", token)
     entities = search_candidate(token)
     entities_list = []
     for entity, labels in entities:
         abstract = query_candidate_abstract(entity)
-
+        print("Got abstract for entity: %s" % entity, abstract)
         if abstract is not None:
             entities_list.append([entity, abstract])
 
@@ -93,6 +94,7 @@ def find_abstract_object(abstract):
 
 
 def candidate_entity_ranking(record):
+    print("Ranking candidates")
     key, text, token, entities = record
     score_max = 0
     entity_score_max = ""
