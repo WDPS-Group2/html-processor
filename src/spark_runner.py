@@ -11,6 +11,8 @@ sc = SparkContext("yarn", "spark-runner-wdps1902")
 
 INFILE = sys.argv[1]
 OUTFILE = sys.argv[2]
+ELASTICSEARCH_HOST = sys.argv[3]
+SPARQL_HOST = sys.argv[4]
 
 rdd = sc.newAPIHadoopFile(INFILE,
                           "org.apache.hadoop.mapreduce.lib.input.TextInputFormat",
@@ -18,7 +20,7 @@ rdd = sc.newAPIHadoopFile(INFILE,
                           "org.apache.hadoop.io.Text",
                           conf={"textinputformat.record.delimiter": "WARC/1.0"})\
         .flatMap(entity_extractor.ner_tagged_tokens)\
-        .flatMap(entity_extractor.candidate_entity_generation)\
+        .flatMap(lambda record: entity_extractor.candidate_entity_generation(record, ELASTICSEARCH_HOST, SPARQL_HOST))\
         .flatMap(entity_extractor.candidate_entity_ranking)
 
 
