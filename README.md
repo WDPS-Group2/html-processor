@@ -21,6 +21,12 @@ issue the following commmands:
  pip install -r requirements.txt
 ```
 
+## Input file
+
+The input script requires the WARC archive to be stored in **HDFS**. You can store a WARC archive by using the following
+command as an example:
+`hadoop fs -put /home/wdps1902/data/sample.warc.gz /user/wdps1902` 
+
 ## Running
 
 This project can be found in the DAS4 cluster under: ***/home/wdps1902/html-processor***. You can navigate there by issuing the commmand:
@@ -30,7 +36,7 @@ Make sure you are located in the previously mentioned directory and run the foll
 
 `./run_spark.sh <INPUT_WARC_FILE> <OUTPUT_TSV>`
 
-* **INPUT_WARC_FILE**: A warc file archive, e.g. *hdfs:///user/wdps1902/sample.warc.gz*, */home/wdps1902/data/sample.warc.gz*;
+* **INPUT_WARC_FILE**: A warc file archive stored in **HDFS**, e.g. *hdfs:///user/wdps1902/sample.warc.gz*
 * **OUTPUT_TSV**: The name of the file where the output will be stored, example: `output.tsv`. 
 
 ## F1 Score
