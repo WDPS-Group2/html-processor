@@ -14,9 +14,7 @@ zip libs.zip sparql.py
 
 echo "Zipping third-party python dependencies"
 
-python3 -m venv venv
 source venv/bin/activate
-pip install -U bs4 nltk requests scikit-learn
 virtualenv --relocatable venv
 zip -r venv.zip venv
 
@@ -56,9 +54,8 @@ TD_PID=$!
 
 echo "Trident should be running now on node $TD_NODE:$TD_PORT (connected to process $TD_PID)"
 
-SCRIPT=${1:-"spark.py"}
-INFILE=${2:-"hdfs:///user/wdps1902/sample.warc.gz"}
-OUTFILE=${3:-"extracted-entities"}
+INFILE=${1:-"hdfs:///user/wdps1902/sample.warc.gz"}
+OUTFILE=${2:-"extracted-entities"}
 
 hdfs dfs -rm -r /user/wdps1902/$OUTFILE
 
@@ -76,7 +73,7 @@ PYSPARK_PYTHON=$(readlink -f $(which python3)) /home/bbkruit/spark-2.4.0-bin-wit
 --executor-memory 4G \
 --archives venv.zip#VENV,nltk_data.zip#NLTK_DATA \
 --py-files libs.zip \
-$SCRIPT $INFILE $OUTFILE $ES_NODE:$ES_PORT $TD_NODE:$TD_PORT
+spark.py $INFILE $OUTFILE $ES_NODE:$ES_PORT $TD_NODE:$TD_PORT
 
 echo "Finished running on spark"
 

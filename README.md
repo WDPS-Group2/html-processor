@@ -2,20 +2,39 @@
 ## Python
 This project is configured to run with **Python 3.6**. In order to load Python 3.6 on the DAS4 cluster, please run `module load python/3.6.0`
 
-## Pipenv
-Make sure you have pipenv installed. If you don't, you can install it using the following command: `pip install pipenv`.
+## Hadoop
 
-## Spark
-In order to run the scripts within Spark, you need to have Spark installed. You can find more information [here](https://spark.apache.org/docs/latest/).
+Please make sure you have Hadoop module enabled: `module load hadoop/2.7.6`.
 
-Before running the script, please set the location of `spark-submit` to the **SPARK_SUBMIT_LOCATION** environment variable. Example:
-`export SPARK_SUBMIT_LOCATION=/local/spark/spark-2.4.0-bin-hadoop2.7/bin/spark-submit`
+## Prun
+
+Please make sure you have Prun module enabled: `module load prun`. This is necessary in order to reserve nodes for Elasticsearch
+and Trident.
+
+## Installing Dependencies 
+
+In order to setup a python virtual environment and install the necessary dependencies for this project, you can
+issue the following commmands:
+```
+ python3 -m venv venv
+ source venv/bin/activate
+ pip install -U bs4 nltk requests scikit-learn
+```
+
 ## Running
-You can easily run the code within spark by executing the script ***spark-run.sh***. First of all please make sure the 
- script has execution rights and if it doesn't, please execute: `chmod +x spark-run.sh` to allow the script to run.
- 
- Before running the script, please make sure you are in the same directory with the script and then, you can execute it as follows:
- `./spark-run.sh [location of warc file]`.
+
+This project can be found in the DAS4 cluster under: ***/home/wdps1902/html-processor***. You can navigate there by issuing the commmand:
+`cd /home/wdps1902/html-processor`.
+
+Make sure you are located in the previously mentioned directory and run the following command: `./spark-run <INPUT_WARC_FILE> <OUTPUT_TSV>`
+
+* **INPUT_WARC_FILE**: A WARC archive that must be located in hdfs, example: `hdfs:///user/wdps1902/sample.warc.gz`;
+* **OUTPUT_TSV**: The name of the file where the output will be stored, example: `output.tsv`. 
+
+After the script is finished executing, you can calculate the **F1** score using the provided Python script: 
+`python3 f1_score_calculcation.py <BENCHMARK_FILE> <OUTPUT_FILE>`
+* **BENCHMARK_FILE**: represents a tab separated file with the benchmark values;
+* **OUTPUT_FILE**: represents the output predictions returned by the script.
 
 # Summary of the process 
 We divide the process roughly in three stages: 
