@@ -31,6 +31,8 @@ Make sure you are located in the previously mentioned directory and run the foll
 * **INPUT_WARC_FILE**: A WARC archive that must be located in hdfs, example: `hdfs:///user/wdps1902/sample.warc.gz`;
 * **OUTPUT_TSV**: The name of the file where the output will be stored, example: `output.tsv`. 
 
+## F1 Score
+
 After the script is finished executing, you can calculate the **F1** score using the provided Python script: 
 `python3 f1_score_calculcation.py <BENCHMARK_FILE> <OUTPUT_FILE>`
 * **BENCHMARK_FILE**: represents a tab separated file with the benchmark values;
