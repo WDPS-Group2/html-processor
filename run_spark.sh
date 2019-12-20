@@ -14,14 +14,31 @@ zip libs.zip sparql.py
 
 echo "Zipping third-party python dependencies"
 
+python3 -m venv venv
 source venv/bin/activate
+pip install -U bs4 nltk requests scikit-learn
 virtualenv --relocatable venv
 zip -r venv.zip venv
+
+echo "Downloading and zipping nltk_data"
+
+rm -rf nltk_data/
+rm nltk_data.zip
+mkdir nltk_data
+cd nltk_data
+python3 -m nltk.downloader -d ./ maxent_ne_chunker
+python3 -m nltk.downloader -d ./ stopwords
+python3 -m nltk.downloader -d ./ words
+python3 -m nltk.downloader -d ./ averaged_perceptron_tagger
+python3 -m nltk.downloader -d ./ punkt
+zip -r nltk_data.zip ./*
+mv nltk_data.zip ../
+cd ..
 
 echo "Starting elasticsearch on a new node"
 
 >.es_log*
-prun -o .es_log -v -t 00:15:00 -np 1 ESPORT=$ES_PORT $ES_BIN </dev/null 2> .es_node &
+prun -o .es_log -v -t 00:30:00 -np 1 ESPORT=$ES_PORT $ES_BIN </dev/null 2> .es_node &
 echo "Waiting for elasticsearch to set up..."
 until [ -n "$ES_NODE" ]; do ES_NODE=$(cat .es_node | grep '^:' | grep -oP '(node...)'); done
 ES_PID=$!
@@ -31,7 +48,7 @@ echo "Elastichsearch should be running now on node $ES_NODE:$ES_PORT (connected 
 
 echo "Starting Trident on a new node"
 
-prun -o .td_log -v -t 00:15:00 -np 1 $TD_BIN server -i $TD_PATH --port $TD_PORT </dev/null 2> .td_node &
+prun -o .td_log -v -t 00:30:00 -np 1 $TD_BIN server -i $TD_PATH --port $TD_PORT </dev/null 2> .td_node &
 echo "waiting 5 seconds for trident to set up..."
 until [ -n "$TD_NODE" ]; do TD_NODE=$(cat .td_node | grep '^:' | grep -oP '(node...)'); done
 sleep 5
@@ -68,7 +85,8 @@ kill $ES_PID
 echo "Killing Trident"
 kill $TD_PID
 
-hdfs dfs -cat /user/wdps1902/$OUTFILE/* > $OUTFILE.tsv
+echo "Moving the output file from hdfs to local directory"
+hdfs dfs -cat /user/wdps1902/$OUTFILE/* > $OUTFILE
 
 
 
