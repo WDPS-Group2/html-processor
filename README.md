@@ -9,7 +9,7 @@ This project is configured to run with **Python 3.6**. In order to load Python 3
 
 Please make sure you have Hadoop module enabled: 
 
-`module load hadoop/2.7.6`.
+`module load hadoop/2.7.6`
 
 ## Prun
 
@@ -29,7 +29,7 @@ command as an example:
 
 This project can be found in the DAS4 cluster under: ***/home/wdps1902/html-processor***. You can navigate there by issuing the commmand:
 
-`cd /home/wdps1902/html-processor`.
+`cd /home/wdps1902/html-processor`
 
 ## Installing Dependencies 
 
@@ -49,13 +49,15 @@ nodes and it will submit an Apache Spark Task to execute the solution:
 
 `./run_spark.sh <INPUT_WARC_FILE_FROM_HDFS> <OUTPUT_TSV>`
 
-* **INPUT_WARC_FILE**: A warc file archive stored in **HDFS**, e.g. *hdfs:///user/wdps1902/sample.warc.gz*
+* **INPUT_WARC_FILE_FROM_HDFS**: A warc file archive stored in **HDFS**, e.g. *hdfs:///user/wdps1902/sample.warc.gz*
 * **OUTPUT_TSV**: The name of the file where the output will be stored, example: `output.tsv`. 
 
 ## F1 Score
 
 After the script is finished executing, you can calculate the **F1** score using the provided Python script: 
+
 `python3 src/score.py <BENCHMARK_FILE> <OUTPUT_FILE>`
+
 * **BENCHMARK_FILE**: represents a tab separated file with the benchmark values;
 * **OUTPUT_FILE**: represents a tab separated file with the output predictions returned by the script.
 
