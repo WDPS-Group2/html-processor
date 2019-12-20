@@ -1,26 +1,41 @@
 # Setup and running
+Summary of all the commands that need to be issued in order to run the solution.
 ## Python
-This project is configured to run with **Python 3.6**. In order to load Python 3.6 on the DAS4 cluster, please run `module load python/3.6.0`
+This project is configured to run with **Python 3.6**. In order to load Python 3.6 on the DAS4 cluster, please run: 
+
+`module load python/3.6.0`
 
 ## Hadoop
 
-Please make sure you have Hadoop module enabled: `module load hadoop/2.7.6`.
+Please make sure you have Hadoop module enabled: 
+
+`module load hadoop/2.7.6`.
 
 ## Prun
 
-Please make sure you have Prun module enabled: `module load prun`. This is necessary in order to reserve nodes for Elasticsearch
-and Trident.
+Please make sure you have Prun module enabled. This is necessary in order to reserve nodes for Elasticsearch
+and Trident:
+
+`module load prun`
 
 ## Input file
 
 The input script requires the WARC archive to be stored in **HDFS**. You can store a WARC archive by using the following
 command as an example:
+
 `hadoop fs -put /home/wdps1902/data/sample.warc.gz /user/wdps1902` 
+
+## Project location
+
+This project can be found in the DAS4 cluster under: ***/home/wdps1902/html-processor***. You can navigate there by issuing the commmand:
+
+`cd /home/wdps1902/html-processor`.
 
 ## Installing Dependencies 
 
-In order to setup a python virtual environment and install the necessary dependencies for this project, you can
-issue the following commmands:
+Make sure you are in the */home/wdps1902/html-processor* directory, after which you can install the project dependencies
+using the following commands:
+
 ```
  python3 -m venv venv
  source venv/bin/activate
@@ -29,12 +44,10 @@ issue the following commmands:
 
 ## Running
 
-This project can be found in the DAS4 cluster under: ***/home/wdps1902/html-processor***. You can navigate there by issuing the commmand:
-`cd /home/wdps1902/html-processor`.
+Use the following command to run the application. This will setup an Elasticsearch instance and a Trident instance on 2 
+nodes and it will submit an Apache Spark Task to execute the solution: 
 
-Make sure you are located in the previously mentioned directory and run the following command: 
-
-`./run_spark.sh <INPUT_WARC_FILE> <OUTPUT_TSV>`
+`./run_spark.sh <INPUT_WARC_FILE_FROM_HDFS> <OUTPUT_TSV>`
 
 * **INPUT_WARC_FILE**: A warc file archive stored in **HDFS**, e.g. *hdfs:///user/wdps1902/sample.warc.gz*
 * **OUTPUT_TSV**: The name of the file where the output will be stored, example: `output.tsv`. 
@@ -44,7 +57,7 @@ Make sure you are located in the previously mentioned directory and run the foll
 After the script is finished executing, you can calculate the **F1** score using the provided Python script: 
 `python3 src/score.py <BENCHMARK_FILE> <OUTPUT_FILE>`
 * **BENCHMARK_FILE**: represents a tab separated file with the benchmark values;
-* **OUTPUT_FILE**: represents the output predictions returned by the script.
+* **OUTPUT_FILE**: represents a tab separated file with the output predictions returned by the script.
 
 # Summary of the process 
 We divide the process roughly in three stages: 
