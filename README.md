@@ -26,7 +26,9 @@ issue the following commmands:
 This project can be found in the DAS4 cluster under: ***/home/wdps1902/html-processor***. You can navigate there by issuing the commmand:
 `cd /home/wdps1902/html-processor`.
 
-Make sure you are located in the previously mentioned directory and run the following command: `./run_spark.sh <INPUT_WARC_FILE> <OUTPUT_TSV>`
+Make sure you are located in the previously mentioned directory and run the following command: 
+
+`./run_spark.sh <INPUT_WARC_FILE> <OUTPUT_TSV>`
 
 * **INPUT_WARC_FILE**: A warc file archive, e.g. *hdfs:///user/wdps1902/sample.warc.gz*, */home/wdps1902/data/sample.warc.gz*;
 * **OUTPUT_TSV**: The name of the file where the output will be stored, example: `output.tsv`. 
