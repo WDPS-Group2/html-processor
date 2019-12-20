@@ -25,7 +25,7 @@ python3 -m nltk.downloader -d ./ punkt
 cd ../../..
 
 INFILE=${1:-"./sample.warc.gz"}
-OUTFILE=${2:-"extracted-entities"}
+OUTFILE=${2:-"extracted-entities.tsv"}
 
 rm -rf $OUTFILE
 

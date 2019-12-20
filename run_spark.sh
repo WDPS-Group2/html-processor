@@ -64,7 +64,7 @@ TD_PID=$!
 echo "Trident should be running now on node $TD_NODE:$TD_PORT (connected to process $TD_PID)"
 
 INFILE=${1:-"hdfs:///user/wdps1902/sample.warc.gz"}
-OUTFILE=${2:-"extracted-entities"}
+OUTFILE=${2:-"extracted-entities.tsv"}
 
 hdfs dfs -rm -r /user/wdps1902/$OUTFILE
 
