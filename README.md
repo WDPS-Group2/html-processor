@@ -11,6 +11,12 @@ Please make sure you have Hadoop module enabled: `module load hadoop/2.7.6`.
 Please make sure you have Prun module enabled: `module load prun`. This is necessary in order to reserve nodes for Elasticsearch
 and Trident.
 
+## Input file
+
+The input script requires the WARC archive to be stored in **HDFS**. You can store a WARC archive by using the following
+command as an example:
+`hadoop fs -put /home/wdps1902/data/sample.warc.gz /user/wdps1902` 
+
 ## Installing Dependencies 
 
 In order to setup a python virtual environment and install the necessary dependencies for this project, you can
@@ -20,12 +26,6 @@ issue the following commmands:
  source venv/bin/activate
  pip install -r requirements.txt
 ```
-
-## Input file
-
-The input script requires the WARC archive to be stored in **HDFS**. You can store a WARC archive by using the following
-command as an example:
-`hadoop fs -put /home/wdps1902/data/sample.warc.gz /user/wdps1902` 
 
 ## Running
 
