@@ -68,12 +68,13 @@ def query_candidate_abstract(entity):
 
 def candidate_entity_generation(record):
     key, text, token = record
-    print("Generating candidate entities for record: %s", token)
+    print("Generating candidate entities for record: %s" % token)
     entities = search_candidate(token)
     entities_list = []
+    print("Got %d candidates for entity: %s" % (len(entities), token))
     for entity, labels in entities:
         abstract = query_candidate_abstract(entity)
-        print("Got abstract for entity: %s" % entity, abstract)
+        print("Got abstract for entity: %s: %s" % (entity, abstract))
         if abstract is not None:
             entities_list.append([entity, abstract])
 

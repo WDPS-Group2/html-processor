@@ -17,7 +17,7 @@ def html2text(record):
     useless_tags = ['footer', 'header', 'sidebar', 'sidebar-right', 'sidebar-left', 'sidebar-wrapper', 'wrapwidget', 'widget']
     if html_doc:
         soup = BeautifulSoup(html_doc,"html.parser")
-
+        print("Converting html to text")
         [s.extract() for s in soup(['script','style', 'code','title','head','footer','header'])]
         [s.extract() for s in soup.find_all(id = useless_tags)]
         [s.extract() for s in soup.find_all(name='div',attrs={"class": useless_tags})]
