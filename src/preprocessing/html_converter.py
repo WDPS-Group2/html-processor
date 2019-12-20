@@ -30,7 +30,7 @@ def html2text(record):
         for p in paragraph:
             if p.get_text(" ", strip=True) != '':
                 text += p.get_text(" ", strip=True)+"\n"
-        if text ==  "":
+        if text == "":
             text = soup.get_text(" ", strip=True)
         return text
     return ""
