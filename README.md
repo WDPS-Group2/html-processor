@@ -18,7 +18,7 @@ issue the following commmands:
 ```
  python3 -m venv venv
  source venv/bin/activate
- pip install -U bs4 nltk requests scikit-learn
+ pip install -r requirements.txt
 ```
 
 ## Running
@@ -34,7 +34,7 @@ Make sure you are located in the previously mentioned directory and run the foll
 ## F1 Score
 
 After the script is finished executing, you can calculate the **F1** score using the provided Python script: 
-`python3 score.py <BENCHMARK_FILE> <OUTPUT_FILE>`
+`python3 src/score.py <BENCHMARK_FILE> <OUTPUT_FILE>`
 * **BENCHMARK_FILE**: represents a tab separated file with the benchmark values;
 * **OUTPUT_FILE**: represents the output predictions returned by the script.
 
@@ -45,7 +45,7 @@ We divide the process roughly in three stages:
 3. Entity Linking
 
 All processes consist of multiple steps. An overview of the process is given in the diagram below. 
-![Diagram of the process](Process_diagram.png)
+![Diagram of the process](docs/Process_diagram.png)
 
 ## (1 & 2) Extraction of Raw Text from WARC-file
 To start the entity linking process, we first need to extract the raw text from the HTML-pages in the WARC-file. 

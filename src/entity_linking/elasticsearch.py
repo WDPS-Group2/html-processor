@@ -17,15 +17,3 @@ def search(domain, query):
             id_labels.setdefault(freebase_id, set()).add( freebase_label )
     return id_labels
 
-
-if __name__ == '__main__':
-    import sys
-    try:
-        _, DOMAIN, QUERY = sys.argv
-    except Exception as e:
-        print('Usage: python kb.py DOMAIN QUERY')
-        sys.exit(0)
-
-    for entity, labels in search(DOMAIN, QUERY).items():
-        print(entity, labels)
-

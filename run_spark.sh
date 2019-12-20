@@ -10,10 +10,7 @@ echo "Zipping local python dependencies"
 if [ -f "libs.zip" ]; then
   echo "Local python dependencies archive already exists"
 else
-  zip libs.zip html2text.py
-  zip libs.zip nlp_preproc_spark.py
-  zip libs.zip elasticsearch.py
-  zip libs.zip sparql.py
+  cd src/ && zip -x score.py,spark_runner.py,spark_runner_locally.py -r ../libs.zip . && cd ..
 fi
 
 echo "Zipping third-party python dependencies"
@@ -85,7 +82,7 @@ PYSPARK_PYTHON=$(readlink -f $(which python3)) /home/bbkruit/spark-2.4.0-bin-wit
 --executor-memory 4G \
 --archives venv.zip#VENV,nltk_data.zip#NLTK_DATA \
 --py-files libs.zip \
-spark.py $INFILE $OUTFILE $ES_NODE:$ES_PORT $TD_NODE:$TD_PORT
+src/spark_runner.py $INFILE $OUTFILE $ES_NODE:$ES_PORT $TD_NODE:$TD_PORT
 
 echo "Finished running on spark"
 

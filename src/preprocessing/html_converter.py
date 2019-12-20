@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup, Comment
 
 
 def record2html(record):
+    print("Record to html!")
     ishtml = False
     html = ""
     for line in record.splitlines():

@@ -10,12 +10,10 @@ QUERY = """
 
 def sparql(domain, query):
     url = 'http://%s/sparql' % domain
-    print("Querying trident with sparkql: %s" % query)
     response = requests.post(url, data={'print': True, 'query': query})
     if response:
         try:
             response = response.json()
-            print("Got response:", response)
             for binding in response.get('results', {}).get('bindings', []):
                 abstract = binding.get('abstract', {}).get('value')
 

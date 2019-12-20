@@ -1,28 +1,17 @@
-import sys
-
-from pyspark import SparkContext
-from html2text import html2text
-from nlp_preproc_spark import nlp_preproc
-from elasticsearch import search
-from sparql import query_abstract
+from preprocessing.html_converter import html2text
+from preprocessing.nlp_preproc_spark import nlp_preproc
+from entity_linking.elasticsearch import search
+from entity_linking.sparql import query_abstract
 from sklearn.feature_extraction.text import TfidfVectorizer
+
 import nltk
-import time
-
-start_time = time.time()
-
-print("Generating Spark Context")
-sc = SparkContext("yarn", "spark-runner-wdps1902")
 
 KEYNAME = "WARC-TREC-ID"
-INFILE = sys.argv[1]
-OUTFILE = sys.argv[2]
-ELASTICSEARCH = sys.argv[3]
-SPARQL = sys.argv[4]
 
 entity_dict = {}
 abstract_dict = {}
 vectorizer = TfidfVectorizer()
+print("Hopa")
 
 
 def find_key(payload):
@@ -48,33 +37,30 @@ def ner_tagged_tokens(record):
             yield key, text, token[0]
 
 
-def search_candidate(token):
+def search_candidate(token, elasticsearch_host):
     if entity_dict.__contains__(token):
         entities = entity_dict[token]
     else:
-        entities = search(ELASTICSEARCH, token).items()
+        entities = search(elasticsearch_host, token).items()
         entity_dict[token] = entities
     return entities
 
 
-def query_candidate_abstract(entity):
+def query_candidate_abstract(entity, sparql_host):
     if abstract_dict.__contains__(entity):
         abstract = abstract_dict[entity]
     else:
-        abstract = query_abstract(SPARQL, entity)
+        abstract = query_abstract(sparql_host, entity)
         abstract_dict[entity] = abstract
     return abstract
 
 
-def candidate_entity_generation(record):
+def candidate_entity_generation(record, elasticsearch_host, sparql_host):
     key, text, token = record
-    # print("Generating candidate entities for record: %s" % token)
-    entities = search_candidate(token)
+    entities = search_candidate(token, elasticsearch_host)
     entities_list = []
-    # print("Got %d candidates for entity: %s" % (len(entities), token))
     for entity, labels in entities:
-        abstract = query_candidate_abstract(entity)
-        # print("Got abstract for entity: %s: %s" % (entity, abstract))
+        abstract = query_candidate_abstract(entity, sparql_host)
         if abstract is not None:
             entities_list.append([entity, abstract])
 
@@ -115,21 +101,3 @@ def candidate_entity_ranking(record):
         return_val = key + '\t' + token + '\t' + entity_score_max
         print("Ranked candidates!")
         yield return_val
-
-
-rdd = sc.newAPIHadoopFile(INFILE,
-                          "org.apache.hadoop.mapreduce.lib.input.TextInputFormat",
-                          "org.apache.hadoop.io.LongWritable",
-                          "org.apache.hadoop.io.Text",
-                          conf={"textinputformat.record.delimiter": "WARC/1.0"})\
-        .flatMap(ner_tagged_tokens)\
-        .flatMap(candidate_entity_generation)\
-        .flatMap(candidate_entity_ranking)
-
-
-print("Parallelism: %d" % sc.defaultParallelism)
-print("Nr partitions: %d" % rdd.getNumPartitions())
-
-rdd.saveAsTextFile(OUTFILE)
-duration = time.time() - start_time
-print("Total duration: %.2f" % duration)
